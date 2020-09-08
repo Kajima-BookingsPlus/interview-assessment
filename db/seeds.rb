@@ -10,7 +10,8 @@ user = User.create!(
   email:      'foo@bar.com',
   first_name: 'John',
   last_name:  'Smith',
-  mobile:     44123456789
+  mobile:     44123456789,
+  password: 'password'
 )
 
 host = Host.create!(
@@ -38,7 +39,7 @@ Booking.create!([
     start_time: 2.days.from_now.change(hour: 12),
     end_time:   2.days.from_now.change(hour: 12),
     user:       user,
-    host:       host
+    host:       host,
     state:      'cancelled'
   }
 ])
