@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_07_095906) do
+ActiveRecord::Schema.define(version: 2020_09_08_110952) do
 
   create_table "bookings", force: :cascade do |t|
     t.integer "user_id"
@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2020_09_07_095906) do
     t.datetime "start_time"
     t.datetime "end_time"
     t.datetime "confirmed_at"
-    t.integer "confirmed_by"
+    t.integer "confirmed_by_id"
     t.string "state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
