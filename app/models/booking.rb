@@ -7,4 +7,12 @@ class Booking < ApplicationRecord
 
   validates :start_time, presence: true
   validates :end_time, presence: true
+
+  def confirm(confirmation_user: user)
+    update!(
+      confirmed_by: confirmation_user,
+      confirmed_at: Time.current,
+      state: :confirmed
+    )
+  end
 end
