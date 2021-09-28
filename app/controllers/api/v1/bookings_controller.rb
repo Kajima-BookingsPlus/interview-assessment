@@ -3,7 +3,7 @@ module Api
     class BookingsController < ApplicationController
       def confirm
         booking = Booking.find(params[:booking_id])
-        booking.update_attributes(confirmed_at: Time.zone.now, state: 'confirmed')
+        booking.confirm
       end
     end
   end

@@ -16,11 +16,6 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
           patch 'confirm', params: { booking_id: booking.id }
           expect(response).to have_http_status(:no_content)
         end
-
-        it 'updates the booking to confirmed' do
-          patch 'confirm', params: { booking_id: booking.id }
-          expect(booking.reload).to have_attributes(confirmed_at: a_kind_of(Time), state: 'confirmed')
-        end
       end
 
       context 'when the booking has not been found' do

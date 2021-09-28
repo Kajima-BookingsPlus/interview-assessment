@@ -7,4 +7,16 @@ class Booking < ApplicationRecord
 
   validates :start_time, presence: true
   validates :end_time, presence: true
+
+  state_machine :initial => :provisional do
+    after_transition :on => :confirm, :do => :confirm_booking
+
+    event :confirm do
+      transition :provisional => :confirmed
+    end
+  end
+
+  def confirm_booking
+    update_attributes(confirmed_at: Time.zone.now)
+  end
 end
