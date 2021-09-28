@@ -2,16 +2,16 @@ module Api
   module V1
     class BookingsController < ApplicationController
       before_action :authorized_to_confirm
+      skip_before_action :verify_authenticity_token
 
       def confirm
-        booking.confirmed_by_id = current_user.id
+        confirm_booking = ConfirmBooking.new(booking, booking_params).call
 
-        if booking.confirm
-          SendConfirmationMessage.new(booking, booking_params).call
-          render status: :ok, json: booking
+        if confirm_booking.errors.empty?
+          render status: :ok, json: confirm_booking
         else
           render status: :unprocessable_entity, json: {
-              errors: booking.errors.full_messages
+              errors: confirm_booking.errors.full_messages
           }
         end
       end

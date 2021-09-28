@@ -15,7 +15,7 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
           let(:expected_response) do
             {
                 confirmed_at: a_kind_of(String),
-                confirmed_by_id: nil,
+                confirmed_by_id: user.id,
                 created_at: a_kind_of(String),
                 state: 'confirmed',
                 updated_at: a_kind_of(String),
