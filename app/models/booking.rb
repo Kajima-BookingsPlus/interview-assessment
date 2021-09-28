@@ -12,11 +12,15 @@ class Booking < ApplicationRecord
     after_transition :on => :confirm, :do => :confirm_booking
 
     event :confirm do
-      transition :provisional => :confirmed, :if => [:user_approved?, :booking_in_future?], unless: :cancelled?
+      transition :provisional => :confirmed, :if => [:user_approved?, :booking_in_future?], unless: [:cancelled?, :expired?]
     end
 
     event :cancel do
       transition [:provisional, :confirmed] => :cancelled
+    end
+
+    event :expire do
+      transition :provisional => :expired, unless: [:booking_in_future?, :confirmed?]
     end
   end
 

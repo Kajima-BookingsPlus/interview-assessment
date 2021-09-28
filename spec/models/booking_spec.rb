@@ -55,7 +55,19 @@ RSpec.describe Booking, type: :model do
 
       it 'does not update the booking to confirmed' do
         expect { confirm }.to not_change { booking.reload.state }
-                                  .and not_change { booking.confirmed_at }
+         .and not_change { booking.confirmed_at }
+      end
+    end
+
+    context 'when the booking has expired' do
+      let(:booking) { create(:booking, start_time: DateTime.yesterday) }
+
+      before { booking.expire }
+
+
+      it 'does not update the booking to confirmed' do
+        expect { confirm }.to not_change { booking.reload.state }
+         .and not_change { booking.confirmed_at }
       end
     end
   end
@@ -65,6 +77,36 @@ RSpec.describe Booking, type: :model do
 
     it 'cancels the booking' do
       expect { cancel }.to change { booking.reload.state }.to('cancelled')
+    end
+  end
+
+  describe '#expire' do
+    subject(:expire) { booking.expire }
+
+    context 'when the booking is in the past and has never been confirmed' do
+      let(:booking) { create(:booking, start_time: DateTime.yesterday) }
+
+      it 'expires the booking' do
+        expect { expire }.to change { booking.reload.state }.to('expired')
+      end
+    end
+
+    context 'when the booking is in the future' do
+      let(:booking) { create(:booking, start_time: DateTime.tomorrow) }
+
+      it 'does not expire the booking' do
+        expect { expire }.not_to change { booking.reload.state }
+      end
+    end
+
+    context 'when the booking is has been confirmed' do
+      let(:booking) { create(:booking) }
+
+      before { booking.confirm }
+
+      it 'does not expire the booking' do
+        expect { expire }.not_to change { booking.reload.state }
+      end
     end
   end
 end
