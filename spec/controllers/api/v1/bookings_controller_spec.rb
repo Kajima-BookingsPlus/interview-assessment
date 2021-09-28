@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::BookingsController, type: :controller do
-  let(:user) { create(:user, :approved) }
-
-  before do
-    http_login(user.email, user.password)
-  end
-
   describe '#confirm' do
-    context 'when the correct request body has been provided' do
+    let(:user) { create(:user, :approved) }
+
+    context 'when the user is authorized to confirm' do
+      before do
+        http_login(user.email, user.password)
+      end
+
       context 'when the booking has been found' do
         context 'when the booking can be confirmed' do
           let(:booking) { create(:booking, :with_host, start_time: DateTime.tomorrow, user: user) }
@@ -51,6 +51,20 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
           patch 'confirm', params: { booking_id: 10000000 }
           expect(response).to have_http_status(:not_found)
         end
+      end
+    end
+
+    context 'when the user is not authorized to confirm' do
+      let(:another_user) { create(:user, :approved) }
+      let(:booking) { create(:booking, :with_host, start_time: DateTime.tomorrow, user: user) }
+
+      before do
+        http_login(another_user.email, another_user.password)
+      end
+
+      it 'responds with a not found response' do
+        patch 'confirm', params: { booking_id: booking.id }
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
