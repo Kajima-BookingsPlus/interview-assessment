@@ -3,7 +3,9 @@ module Api
     class BookingsController < ApplicationController
       def confirm
         booking = Booking.find(params[:booking_id])
-        booking.confirm
+        if booking.confirm
+          render status: :ok, json: booking
+        end
       end
     end
   end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::BookingsController, type: :controller do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, :approved) }
 
   before do
     http_login(user.email, user.password)
@@ -10,11 +10,23 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
   describe '#confirm' do
     context 'when the correct request body has been provided' do
       context 'when the booking has been found' do
-        let(:booking) { create(:booking, :with_host) }
+        let(:booking) { create(:booking, :with_host, start_time: DateTime.tomorrow, user: user) }
+        let(:expected_response) do
+          {
+              confirmed_at: a_kind_of(String),
+              confirmed_by_id: nil,
+              created_at: a_kind_of(String),
+              state: 'confirmed',
+              updated_at: a_kind_of(String),
+              user_id: user.id
+          }.stringify_keys
+        end
+
 
         it 'responds successfully' do
           patch 'confirm', params: { booking_id: booking.id }
-          expect(response).to have_http_status(:no_content)
+          expect(response).to have_http_status(:ok)
+          expect(JSON.parse(response.body)).to include(expected_response)
         end
       end
 
