@@ -17,7 +17,7 @@ RSpec.describe Booking, type: :model do
       let(:user) { create(:user) }
 
       it 'does not update the booking to confirmed' do
-        expect { confirm }.to not_change { booking.state }
+        expect { confirm }.to not_change { booking.reload.state }
          .and not_change { booking.confirmed_at }
       end
     end
@@ -26,7 +26,7 @@ RSpec.describe Booking, type: :model do
       let(:booking) { create(:booking, start_time: DateTime.tomorrow, user: user) }
 
       it 'updates the booking to confirmed' do
-        expect { confirm }.to change { booking.state }.from('provisional').to('confirmed')
+        expect { confirm }.to change { booking.reload.state }.from('provisional').to('confirmed')
          .and change { booking.confirmed_at }.to(a_kind_of(Time))
       end
     end
@@ -35,7 +35,16 @@ RSpec.describe Booking, type: :model do
       let(:booking) { create(:booking, start_time: DateTime.yesterday, user: user) }
 
       it 'does not update the booking to confirmed' do
-        expect { confirm }.to not_change { booking.state }
+        expect { confirm }.to not_change { booking.reload.state }
+         .and not_change { booking.confirmed_at }
+      end
+    end
+
+    context 'when the booking has already been confirmed' do
+      before { confirm }
+
+      it 'does not update the booking to confirmed' do
+        expect { confirm }.to not_change { booking.reload.state }
          .and not_change { booking.confirmed_at }
       end
     end
