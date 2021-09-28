@@ -7,6 +7,7 @@ module Api
         booking.confirmed_by_id = current_user.id
 
         if booking.confirm
+          SendConfirmationMessage.new(booking, booking_params).call
           render status: :ok, json: booking
         else
           render status: :unprocessable_entity, json: {
