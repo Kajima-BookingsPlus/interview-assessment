@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Booking, type: :model do
-  describe 'confirm' do
+  let(:booking) { create(:booking, user: user) }
+  let(:user) { create(:user, :approved) }
+
+  describe '#confirm' do
     subject(:confirm) { booking.confirm }
-    let(:booking) { create(:booking, user: user) }
-    let(:user) { create(:user, :approved) }
 
     context 'when the user has been approved' do
       it 'updates the booking to confirmed' do
@@ -47,6 +48,23 @@ RSpec.describe Booking, type: :model do
         expect { confirm }.to not_change { booking.reload.state }
          .and not_change { booking.confirmed_at }
       end
+    end
+
+    context 'when the booking has been cancelled' do
+      before { booking.cancel }
+
+      it 'does not update the booking to confirmed' do
+        expect { confirm }.to not_change { booking.reload.state }
+                                  .and not_change { booking.confirmed_at }
+      end
+    end
+  end
+
+  describe '#cancel' do
+    subject(:cancel) { booking.cancel }
+
+    it 'cancels the booking' do
+      expect { cancel }.to change { booking.reload.state }.to('cancelled')
     end
   end
 end
