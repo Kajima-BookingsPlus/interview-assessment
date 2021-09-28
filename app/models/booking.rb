@@ -12,7 +12,7 @@ class Booking < ApplicationRecord
     after_transition :on => :confirm, :do => :confirm_booking
 
     event :confirm do
-      transition :provisional => :confirmed, :if => :user_approved?
+      transition :provisional => :confirmed, :if => [:user_approved?, :booking_in_future?]
     end
   end
 
@@ -24,5 +24,9 @@ class Booking < ApplicationRecord
 
   def user_approved?
     user.approved?
+  end
+
+  def booking_in_future?
+    start_time.future?
   end
 end
