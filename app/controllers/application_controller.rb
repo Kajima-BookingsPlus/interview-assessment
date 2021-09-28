@@ -1,6 +1,12 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate
 
+  rescue_from ActiveRecord::RecordNotFound, :with => :render_404
+
+  def render_404
+    render status: :not_found, json: { error: :not_found }
+  end
+
   private
 
   def authenticate
