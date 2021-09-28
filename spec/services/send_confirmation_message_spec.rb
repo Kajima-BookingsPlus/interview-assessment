@@ -37,12 +37,32 @@ RSpec.describe SendConfirmationMessage do
           let(:host) { create(:host, mobile: nil) }
           let(:booking) { create(:booking, user: user, host: host) }
 
-          before { allow(SmsSender).to receive(:new) }
-
           it 'does not attempt to send an sms message to the user' do
+            expect(SmsSender).not_to receive(:new)
             send_confirmation
-            expect(SmsSender).not_to have_received(:new)
           end
+        end
+      end
+
+      context 'when the confirmation type is an email' do
+        let(:user) { create(:user) }
+        let(:booking) { create(:booking, :with_host) }
+        let(:confirmation_type) { 'email' }
+        let(:mailer) do
+          instance_double(
+           ConfirmationMailer,
+           booking_confirmation_email: OpenStruct.new(deliver_later: true)
+          )
+        end
+
+        before do
+          allow(ConfirmationMailer).to receive(:with).and_return(mailer)
+        end
+
+        it 'sends an email to the host and booking user' do
+          send_confirmation
+          expect(ConfirmationMailer).to have_received(:with).twice
+          expect(mailer).to have_received(:booking_confirmation_email).twice
         end
       end
     end
