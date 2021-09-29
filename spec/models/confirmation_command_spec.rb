@@ -15,9 +15,9 @@ RSpec.describe ConfirmationCommand, type: :model do
       user = double(:user, approved: true)
       host = double(:host)
       booking = double(:booking,user: user, host: host, start_time: DateTime.now + 5.days, state: "provisional")
-      allow(Booking).to receive(:find).and_return(booking)
+      
       params = {id: 1}
-      command = ConfirmationCommand.new(params: params)
+      command = ConfirmationCommand.new(booking: booking)
       #When
       command.execute
       #Then
