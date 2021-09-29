@@ -1,4 +1,5 @@
 <%= form_with(model: confirmation, local: true) do |form| %>
+   
   <% if confirmation.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(confirmation.errors.count, "error") %> prohibited this confirmation from being saved:</h2>
@@ -13,7 +14,7 @@
 
   <div class="field">
     <%= form.label :booking_id %>
-    <%= form.text_field :booking_id %>
+    <%= form.select :booking_id, Booking.all.collect { |b| [b,b.id] } %>
   </div>
 
   <div class="field">
@@ -23,7 +24,7 @@
 
   <div class="field">
     <%= form.label :type %>
-    <%= form.text_field :type %>
+    <%= form.select :type,  [:email,:sms] %>
   </div>
 
   <div class="actions">

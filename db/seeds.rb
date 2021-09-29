@@ -7,17 +7,17 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 user = User.create!(
-  email:      'foo@bar.com',
-  first_name: 'John',
-  last_name:  'Smith',
-  password:  'pml',
+  email:      'user@example.com',
+  first_name: 'A',
+  last_name:  'user',
+  password:  's3cr3t',
   mobile:     44123456789
 )
 
 host = Host.create!(
-  email:      'foo@bar.com',
-  first_name: 'John',
-  last_name:  'Smith',
+  email:      'host@example.com',
+  first_name: 'A',
+  last_name:  'host',
   mobile:     44123456789
 )
 

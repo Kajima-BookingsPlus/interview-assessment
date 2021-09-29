@@ -1,6 +1,6 @@
 class ConfirmationsController < ApplicationController
   before_action :set_confirmation, only: [:show, :edit, :update, :destroy]
-
+  
   # GET /confirmations
   # GET /confirmations.json
   def index
@@ -21,6 +21,9 @@ class ConfirmationsController < ApplicationController
   def edit
   end
 
+  def confirm
+    byebug 
+  end
   # POST /confirmations
   # POST /confirmations.json
   def create
