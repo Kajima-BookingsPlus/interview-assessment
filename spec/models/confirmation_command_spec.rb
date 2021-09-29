@@ -19,7 +19,7 @@ RSpec.describe ConfirmationCommand, type: :model do
 
     it 'should be confirmed given a valid booking' do
       #given
-      user = double(:user, approved: true)
+      user = double(:user, approved?: true)
       host = double(:host)
       booking = double(:booking,user: user, host: host, start_time: DateTime.now + 5.days, state: "provisional")
 
@@ -28,7 +28,7 @@ RSpec.describe ConfirmationCommand, type: :model do
       #When
       command.execute
       #Then
-      expect(booking).to receive(:state)
+      expect(booking).to receive(:state) { "confirmed" }
     end
     
   end
