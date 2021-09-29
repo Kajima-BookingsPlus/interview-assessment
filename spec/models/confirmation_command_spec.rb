@@ -1,3 +1,5 @@
+require 'date'
+
 class ConfirmationCommand
   def initialize (booking: booking, send_confirmation_msg: false,confirmation_type: :email)
     @booking = booking
@@ -8,7 +10,7 @@ class ConfirmationCommand
     if(@booking.user.approved?)
       if(@booking.state == "provisional")
         @booking.confirmed!
-        
+        @booking.confirmed_at = DateTime.now
       end
     end
 
@@ -28,6 +30,7 @@ RSpec.describe ConfirmationCommand, type: :model do
       booking = double(:booking,user: user, host: host, start_time: DateTime.now + 5.days, state: "provisional")
 
       expect(booking).to receive(:confirmed!) 
+      allow(booking).to receive(:confirmed_at=).with(any_args)
       params = {id: 1}
       command = ConfirmationCommand.new(booking: booking)
       #When
@@ -43,7 +46,7 @@ RSpec.describe ConfirmationCommand, type: :model do
       booking = double(:booking,user: user, host: host, start_time: DateTime.now + 5.days, state: "provisional")
 
       allow(booking).to receive(:confirmed!) 
-      expect(booking).to receive(:confirmed_at) 
+      expect(booking).to receive(:confirmed_at=).with(any_args)
       
       params = {id: 1}
       command = ConfirmationCommand.new(booking: booking)
