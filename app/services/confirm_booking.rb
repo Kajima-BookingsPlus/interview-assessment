@@ -5,6 +5,10 @@ class ConfirmBooking
   end
 
   def call
+    booking_form = BookingForm.new(@booking_params)
+    booking_form.valid?
+    return booking_form unless booking_form.errors.empty?
+
     @booking.confirmed_by_id = @booking.user.id
 
     if @booking.confirm

@@ -6,7 +6,7 @@ class SendConfirmationMessage
   end
 
   def call
-    return unless @send_confirmation_msg
+    return unless !!@send_confirmation_msg
 
     sms? ? send_sms_messages : send_emails
   end
@@ -18,7 +18,7 @@ class SendConfirmationMessage
   end
 
   def send_sms_messages
-    users_to_notify.compact.each do |user|
+    users_to_notify.each do |user|
       next unless user.mobile
       ::SmsSender.new(user.mobile, 'Booking confirmed').deliver
     end
@@ -31,6 +31,6 @@ class SendConfirmationMessage
   end
 
   def users_to_notify
-    [@booking.user, @booking.host]
+    [@booking.user, @booking.host].compact
   end
 end
