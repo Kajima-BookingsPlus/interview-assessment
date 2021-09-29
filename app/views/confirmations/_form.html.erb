@@ -1,0 +1,32 @@
+<%= form_with(model: confirmation, local: true) do |form| %>
+  <% if confirmation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(confirmation.errors.count, "error") %> prohibited this confirmation from being saved:</h2>
+
+      <ul>
+        <% confirmation.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :booking_id %>
+    <%= form.text_field :booking_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :send_confirmation_msg %>
+    <%= form.check_box :send_confirmation_msg %>
+  </div>
+
+  <div class="field">
+    <%= form.label :type %>
+    <%= form.text_field :type %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

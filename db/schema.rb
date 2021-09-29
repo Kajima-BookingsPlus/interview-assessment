@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_07_095906) do
+ActiveRecord::Schema.define(version: 2021_09_29_151039) do
 
   create_table "bookings", force: :cascade do |t|
     t.integer "user_id"
@@ -24,6 +24,15 @@ ActiveRecord::Schema.define(version: 2020_09_07_095906) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["host_id"], name: "index_bookings_on_host_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "confirmations", force: :cascade do |t|
+    t.integer "booking_id", null: false
+    t.boolean "send_confirmation_msg"
+    t.string "type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["booking_id"], name: "index_confirmations_on_booking_id"
   end
 
   create_table "hosts", force: :cascade do |t|
@@ -46,4 +55,5 @@ ActiveRecord::Schema.define(version: 2020_09_07_095906) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "confirmations", "bookings"
 end
