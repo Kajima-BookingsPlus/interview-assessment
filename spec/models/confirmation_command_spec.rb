@@ -7,7 +7,7 @@ class ConfirmationCommand
   def execute
     if(@booking.user.approved?)
       if(@booking.state == "provisional")
-
+        @booking.confirmed!
       end
     end
 
@@ -23,12 +23,14 @@ RSpec.describe ConfirmationCommand, type: :model do
       host = double(:host)
       booking = double(:booking,user: user, host: host, start_time: DateTime.now + 5.days, state: "provisional")
 
+      expect(booking).to receive(:confirmed!) {}
+      
       params = {id: 1}
       command = ConfirmationCommand.new(booking: booking)
       #When
       command.execute
       #Then
-      expect(booking).to receive(:state) { "confirmed" }
+
     end
     
   end
