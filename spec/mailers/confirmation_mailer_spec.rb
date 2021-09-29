@@ -8,7 +8,7 @@ RSpec.describe ConfirmationMailer, type: :mailer do
     let(:mail) { mailer.booking_confirmation_email }
     let(:user) { create(:user) }
 
-    it 'ouputs the correct email' do
+    it 'outputs the correct email' do
       expect(mail.body).to eq('Your booking has been confirmed')
       expect(mail.to).to eq([user.email])
       expect(mail.subject).to eq('Booking confirmed')

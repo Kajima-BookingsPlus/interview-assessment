@@ -19,7 +19,7 @@ module Api
       private
 
       def booking_params
-        params.permit(:booking_id, :confirmation_type, :send_confirmation_msg )
+        params.permit(:booking_id, :confirmation_type, :send_confirmation_msg)
       end
 
       def authorized_to_confirm
