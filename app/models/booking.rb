@@ -29,6 +29,6 @@ class Booking < ApplicationRecord
   validates :end_time, presence: true
   def to_s
     return "booking: for #{user.full_name}" if host.nil?
-    "booking: #{user.full_name} -> #{host.full_name}"
+    "booking: #{user.full_name} -> #{host.full_name} - #{state}"
   end
 end

@@ -8,9 +8,18 @@
 
 user = User.create!(
   email:      'user@example.com',
-  first_name: 'A',
+  first_name: 'Aproved user',
   last_name:  'user',
   password:  's3cr3t',
+  mobile:     44123456789,
+  approved: true,
+)
+unapproved_user = User.create!(
+  email:      'unproveduser@example.com',
+  first_name: 'Unapproved',
+  last_name:  'user',
+  password:  's3cr3t',
+  approved: false,
   mobile:     44123456789
 )
 
@@ -41,5 +50,19 @@ Booking.create!([
     user:       user,
     host:       host,
     state:      'cancelled'
+  },
+  {
+    start_time: 2.days.from_now.change(hour: 12),
+    end_time:   2.days.from_now.change(hour: 12),
+    user:       unapproved_user,
+    host:       host,
+    state:      'provisional'
+  },
+  {
+    start_time: 2.day.ago.change(hour: 12),
+    end_time:   2.day.ago.change(hour: 12),
+    user:       user,
+    host:       host,
+    state:      'expired'
   }
 ])
