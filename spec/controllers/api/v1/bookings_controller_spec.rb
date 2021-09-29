@@ -10,36 +10,56 @@ RSpec.describe Api::V1::BookingsController, type: :controller do
       end
 
       context 'when the booking has been found' do
-        context 'when the booking can be confirmed' do
-          let(:booking) { create(:booking, :with_host, start_time: DateTime.tomorrow, user: user) }
-          let(:expected_response) do
-            {
-                confirmed_at: a_kind_of(String),
-                confirmed_by_id: user.id,
-                created_at: a_kind_of(String),
-                state: 'confirmed',
-                updated_at: a_kind_of(String),
-                user_id: user.id
-            }.stringify_keys
+        let(:booking) { create(:booking, :with_host, start_time: DateTime.tomorrow, user: user) }
+
+        context 'when the correct attributes have been provided' do
+          let(:params) { { booking_id: booking.id, send_confirmation_msg: 'true' } }
+
+          context 'when the booking can be confirmed' do
+            let(:expected_response) do
+              {
+                  confirmed_at: a_kind_of(String),
+                  confirmed_by_id: user.id,
+                  created_at: a_kind_of(String),
+                  state: 'confirmed',
+                  updated_at: a_kind_of(String),
+                  user_id: user.id
+              }.stringify_keys
+            end
+
+            it 'responds successfully' do
+              patch 'confirm', params: params
+              expect(response).to have_http_status(:ok)
+              expect(JSON.parse(response.body)).to include(expected_response)
+            end
           end
 
-          it 'responds successfully' do
-            patch 'confirm', params: { booking_id: booking.id }
-            expect(response).to have_http_status(:ok)
-            expect(JSON.parse(response.body)).to include(expected_response)
+          context 'when the booking cannot be confirmed' do
+            let(:booking) {create(:booking, :with_host, user: user, state: 'cancelled')}
+            let(:expected_response) do
+              {
+                  errors: ["State cannot transition via \"confirm\""]
+              }.stringify_keys
+            end
+
+            it 'responds unsuccessfully' do
+              patch 'confirm', params: params
+              expect(response).to have_http_status(:unprocessable_entity)
+              expect(JSON.parse(response.body)).to include(expected_response)
+            end
           end
         end
 
-        context 'when the booking cannot be confirmed' do
-          let(:booking) { create(:booking, :with_host, user: user, state: 'cancelled') }
+        context 'when incorrect attributes have been provided' do
+          let(:params) { { booking_id: booking.id, send_confirmation_msg: 'falsee' } }
           let(:expected_response) do
             {
-              errors: [ "State cannot transition via \"confirm\""]
+                errors: ['Send confirmation msg is not included in the list']
             }.stringify_keys
           end
 
           it 'responds unsuccessfully' do
-            patch 'confirm', params: { booking_id: booking.id }
+            patch 'confirm', params: params
             expect(response).to have_http_status(:unprocessable_entity)
             expect(JSON.parse(response.body)).to include(expected_response)
           end
