@@ -38,11 +38,18 @@ Booking.create!([
     state:      'provisional'
   },
   {
-    start_time: 1.day.from_now.change(hour: 14),
-    end_time:   1.day.from_now.change(hour: 15),
+    start_time: 1.day.from_now.change(hour: 12),
+    end_time:   1.day.from_now.change(hour: 13),
     user:       user,
     host:       host,
     state:      'provisional'
+  },
+  {
+    start_time: 2.days.from_now.change(hour: 12),
+    end_time:   2.days.from_now.change(hour: 12),
+    user:       user,
+    host:       host,
+    state:      'confirmed'
   },
   {
     start_time: 2.days.from_now.change(hour: 12),
@@ -50,13 +57,6 @@ Booking.create!([
     user:       user,
     host:       host,
     state:      'cancelled'
-  },
-  {
-    start_time: 2.days.from_now.change(hour: 12),
-    end_time:   2.days.from_now.change(hour: 12),
-    user:       unapproved_user,
-    host:       host,
-    state:      'provisional'
   },
   {
     start_time: 2.day.ago.change(hour: 12),
