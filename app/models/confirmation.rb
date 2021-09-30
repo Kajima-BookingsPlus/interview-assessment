@@ -20,7 +20,7 @@
 class Confirmation < ApplicationRecord
   belongs_to :booking
   self.inheritance_column = :_type_disabled
-  def confirm(email=Emailer,current_user,sms=SMSSender,msg="notification of booking")
+  def confirm(email: Emailer,current_user:,sms: SMSSender,msg: "notification of booking")
     return unless current_user.approved?
 
     booking.update state: :confirmed
