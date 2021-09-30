@@ -24,9 +24,7 @@ class Confirmation < ApplicationRecord
     result = {result: :unconfirmed, message: "Booking unconfirmed, Unapproved user"}
     return unless current_user.approved?
 
-    booking.update state: :confirmed
-    booking.update confirmed_at: DateTime.now
-    booking.update confirmed_by_id: current_user.id
+    booking.confirm by: current_user
 
     if send_confirmation_msg
       if type == "sms"

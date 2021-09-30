@@ -24,8 +24,8 @@ class ConfirmationsController < ApplicationController
   def confirm
     booking = Booking.find(params[:id])
     confirmation = Confirmation.create(booking: booking)
-    confirmation.confirm
-    render json: {confirmed: true}
+    result = confirmation.confirm
+    render json: result
   end
   # POST /confirmations
   # POST /confirmations.json
@@ -33,9 +33,11 @@ class ConfirmationsController < ApplicationController
     @confirmation = Confirmation.new(confirmation_params)
     respond_to do |format|
       if @confirmation.save
-        result = @confirmation.confirm(current_user: current_user)
-        format.html { redirect_to @confirmation, notice: result[:message] }
-        format.json { render :show, status: :created, location: @confirmation }
+        @result = @confirmation.confirm(current_user: current_user)
+        format.html { 
+          redirect_to @confirmation, notice: "Confirmation was successfully created. #{@result[:message]}" 
+        }
+        format.json { render :show, status: :created, location: result}
       else
         format.html { render :new }
         format.json { render json: @confirmation.errors, status: :unprocessable_entity }

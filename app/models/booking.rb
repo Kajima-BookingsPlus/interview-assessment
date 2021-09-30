@@ -27,6 +27,11 @@ class Booking < ApplicationRecord
 
   validates :start_time, presence: true
   validates :end_time, presence: true
+  def confirm by:
+    self.update state: :confirmed
+    self.update confirmed_at: DateTime.now
+    self.update confirmed_by_id: by.id
+  end
   def to_s
     return "booking: for #{user.full_name} -> No Host!  - #{state}" if host.nil?
     "booking: #{user.full_name} -> #{host.full_name} - #{state}"
