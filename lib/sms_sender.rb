@@ -1,4 +1,4 @@
-class SMSSender
+class SmsSender
   def initialize(number, message)
     @number  = number
     @message = message
