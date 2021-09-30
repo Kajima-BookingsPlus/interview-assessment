@@ -6,7 +6,7 @@
 #  send_confirmation_msg :boolean
 #  type                  :string
 #  created_at            :datetime         not null
-#  updated_at            :datetime         not null
+#  updated_at            :datetime         not nul
 #  booking_id            :integer          not null
 #
 # Indexes
@@ -21,6 +21,7 @@ class Confirmation < ApplicationRecord
   belongs_to :booking
   self.inheritance_column = :_type_disabled
   def confirm(email: EmailSender,current_user:,sms: SmsSender,msg: "notification of booking")
+    result = {result: :unconfirmed, message: "Booking unconfirmed, Unapproved user"}
     return unless current_user.approved?
 
     booking.update state: :confirmed
@@ -31,10 +32,13 @@ class Confirmation < ApplicationRecord
       if type == "sms"
         sms.new(booking.user.mobile,msg).deliver
         sms.new(booking.host.mobile,msg).deliver if booking.host
+        result = { result: :confirmed, message: "Booking confirmed, notified by sms"}
       else
         email.new(booking.user.email,msg).deliver
         email.new(booking.host.email,msg).deliver if booking.host
+        result = { result: :confirmed, message: "Booking confirmed, notified by email"}
       end
     end
+    result
   end
 end
