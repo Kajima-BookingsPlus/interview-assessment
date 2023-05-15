@@ -1,0 +1,18 @@
+version: "3.4"
+
+services:
+  app:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - gem_cache:/usr/local/bundle/gems
+    environment:
+      RAILS_ENV: development
+      NODE_ENV: development
+volumes:
+  gem_cache:
