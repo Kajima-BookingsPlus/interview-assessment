@@ -6,6 +6,12 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+module YAML
+  class << self
+    alias_method :load, :unsafe_load if YAML.respond_to? :unsafe_load
+  end
+end
+
 module InterviewAssessment
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
