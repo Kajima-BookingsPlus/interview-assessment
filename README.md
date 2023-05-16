@@ -1,8 +1,8 @@
 # Dependencies
 
-The sample application uses Ruby 3.0.0 and Node 16.0.0
+The sample application uses Ruby 3.2.2 and Node 16.0.0
 
-# Confirm a booking
+# Task: Confirm a booking
 
 Within our sample booking application we have provisional bookings and we need to confirm these.
 
